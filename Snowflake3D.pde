@@ -1,4 +1,4 @@
-class Snowflake {
+class Snowflake3D {
   int flakeSize;
   int half;
   int quarter;
@@ -25,37 +25,24 @@ class Snowflake {
   float sevenThirtySixths = 7.0 * thirtySixth;
   float cosineOfSevenThirtySixth = cos(sevenThirtySixths);
   float sineOfSevenThirtySixth = sin(sevenThirtySixths);
+  int thickness = 4;
 
-  Snowflake(int size) {
+  Snowflake3D(int size) {
     flakeSize = size;
     half = flakeSize / 2;
     quarter = flakeSize / 4;
     eighth = flakeSize / 8;
   }
   
-  void drawSnowflake(int x, int y, double rotation) {
-    
-   pushMatrix();
-   translate(x, y);
-    
-   rotate((float) rotation);
-   for (int i = 0; i < 6; i++) {
-    drawInnerHex();
-    drawSegment();
-    rotate((float) sixth);
-   }
-    
-   popMatrix();
- }
- 
  void drawSnowflake() {
-   pushMatrix();
+   push();
    for (int i = 0; i < 6; i++) {
-    drawInnerHex();
+    //translate(half/2.0, 0, 0);
     drawSegment();
+    drawInnerHex();
     rotate((float) sixth);
    }    
-   popMatrix();
+   pop();
  }
 
 
@@ -69,7 +56,7 @@ class Snowflake {
     int y1 = (int) innerRadius;
     int x2 = (int) (cosineOfTwelfth * innerRadius);
     int y2 = (int) (sineOfTwelfth * innerRadius);
-    line(x1, y1, x2, y2);
+    drawBox(x1, y1, x2, y2);
     
     double dx = x2 - x1;
     double dy = y2 - y1;
@@ -77,14 +64,14 @@ class Snowflake {
     int y3 = (int) (dy / 3.0 + y1);
     int x4 = (int) (cosineOfSevenThirtySixth * nextRadius);
     int y4 = (int) (sineOfSevenThirtySixth * nextRadius);
-    line(x3, y3, x4, y4);
-    line(-x3, y3, -x4, y4);
-    line(-x4, y4, x4, y4);
+    drawBox(x3, y3, x4, y4);
+    drawBox(-x3, y3, -x4, y4);
+    drawBox(-x4, y4, x4, y4);
     
     // Now make the triangle above the rhombus
     int y5 = (int) thirdRadius;
-    line(x4, y4, 0, y5);
-    line(-x4, y4, 0, y5);
+    drawBox(x4, y4, 0, y5);
+    drawBox(-x4, y4, 0, y5);
     
     
     //println(x1, y1, x2, y2);
@@ -93,8 +80,26 @@ class Snowflake {
   }
   
   void drawSegment() {
-    line(0, 0, 0, half);
-    //box(half, 4, 4);
+    //line(0, 0, 0, half);
+    //box(half, thickness, thickness);
+    drawBox(0, 0, 0, half);
+  }
+  
+  void drawBox(int x1, int y1, int x2, int y2) {
+    push();
+    float dy = y2 - y1;
+    float dx = x2 - x1;
+    int len = (int) Math.sqrt((dx * dx) + (dy * dy));
+    if (x2 < x1) {
+      len = -len;
+    }
+    float angle = asin((float) (dy / len));
+    translate(x1, y1, 0);
+    rotate(angle);
+    translate(len/2, 0, 0);
+    box(len, thickness, thickness);
+    //println(x1, y1, x2, y2, len, angle);
+    pop();
   }
   
 }
