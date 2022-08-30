@@ -1,14 +1,22 @@
 class Snowflake {
   int flakeSize;
-  int half;
-  int quarter;
-  int eighth;
+  int halfFlakeSize;
+
   float sixth = PI / 3.0; // Sixth of a circle in radians
+  float eighth = PI / 4.0;
+  float cosineOfEighth = cos(eighth);
+  float sineOfEighth = sin(eighth);
   
   float twelfth = PI / 6.0; // twentyFourth of a circle in radians
   float cosineOfTwelfth = cos(twelfth);
   float sineOfTwelfth = sin(twelfth);
   
+  float thirtySixth = PI / 18.0;
+  float sevenThirtySixths = 7.0 * thirtySixth;
+  float cosineOfSevenThirtySixth = cos(sevenThirtySixths);
+  float sineOfSevenThirtySixth = sin(sevenThirtySixths);
+  
+  /*
   float twentyFourth = PI / 12.0; // twentyFourth of a circle in radians
   float cosineOfTwentyFourth = cos(twentyFourth);
   float sineOfTwentyFourth = sin(twentyFourth);
@@ -21,16 +29,11 @@ class Snowflake {
   float cosineOfFiveTwentyFourth = cos(fiveTwentyFourth);
   float sineOfFiveTwentyFourth = sin(fiveTwentyFourth);
   
-  float thirtySixth = PI / 18.0;
-  float sevenThirtySixths = 7.0 * thirtySixth;
-  float cosineOfSevenThirtySixth = cos(sevenThirtySixths);
-  float sineOfSevenThirtySixth = sin(sevenThirtySixths);
+  */
 
   Snowflake(int size) {
     flakeSize = size;
-    half = flakeSize / 2;
-    quarter = flakeSize / 4;
-    eighth = flakeSize / 8;
+    halfFlakeSize = flakeSize / 2;
   }
   
   void drawSnowflake(int x, int y, double rotation) {
@@ -51,19 +54,38 @@ class Snowflake {
  void drawSnowflake() {
    pushMatrix();
    for (int i = 0; i < 6; i++) {
-    drawInnerHex();
     drawSegment();
     rotate((float) sixth);
    }    
    popMatrix();
  }
 
+  void drawSegment() {
+    line(0, 0, 0, halfFlakeSize);
+    drawInnerHex();
+    drawArms();
+  }
+  
+  void drawArms() {
+    drawArm(flakeSize * 0.15, flakeSize * 0.2);
+    drawArm(flakeSize * 0.25, flakeSize * 0.2);
+    drawArm(flakeSize * 0.35, flakeSize * 0.1);
+  }
 
+  void drawArm(float rad, float len) {
+    pushMatrix();
+    translate(0f, rad);
+    int x = (int) (sineOfEighth * len);
+    int y = (int) (cosineOfEighth * len);
+    line(0, 0, x, y);
+    line(0, 0, -x, y);
+    popMatrix();
+  }
 
   void drawInnerHex() {
-    double innerRadius = flakeSize * 0.1;
-    double nextRadius = flakeSize * 0.2;
-    double thirdRadius = flakeSize * 0.3;
+    double innerRadius = flakeSize * 0.05;
+    double nextRadius = flakeSize * 0.15;
+    double thirdRadius = flakeSize * 0.2;
     
     int x1 = 0;
     int y1 = (int) innerRadius;
@@ -92,9 +114,5 @@ class Snowflake {
     
   }
   
-  void drawSegment() {
-    line(0, 0, 0, half);
-    //box(half, 4, 4);
-  }
   
 }

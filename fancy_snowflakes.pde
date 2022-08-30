@@ -1,7 +1,7 @@
 int windowWidth = 1920; // 16/9
 int windowHeight = 1080;
-int numCols = 8;
-int numRows = 5;
+int numCols = 16;
+int numRows = 9;
 int flakeBox = windowHeight / numRows;
 int flakeSize = (int) (flakeBox * 0.8);
 int gap = flakeBox - flakeSize;
@@ -11,6 +11,8 @@ int rotationCycleZ = 400;
 int countX;
 int countY;
 int countZ;
+int lightCycleRedX = 250;
+int countRedX;
 int numFrames = 1000;
 int frameNo = 0;
 
@@ -38,10 +40,8 @@ void draw() {
   clear();
   //directionalLight(255, 0, 0, 1, 1, -0.5);
   //directionalLight(64, 64, 255, -1, 1, -0.5);
-  pointLight(255, 0, 0, 0, 500, 300);
-  pointLight(0, 0, 255, 1600, 500, 200);
   //lightSpecular(0, 255, 255);
-  shininess(00);
+  shininess(1000);
   //specular(0, 255, 255);
   //translate(1920/2, windowHeight/2, 0);
   //sphere(120);
@@ -59,6 +59,13 @@ void draw() {
 void drawRowsAndColumns() {
   double rotationX = getRotation(countX++, rotationCycleX);
   double rotationZ = getRotation(countZ++, rotationCycleZ);
+  
+  double redXProportion = getProportion(countRedX++, lightCycleRedX);
+  int redX = (int) lerp(0.0f, (float) lightCycleRedX, (float) redXProportion);
+  
+  pointLight(255, 0, 0, redX, 500, 300);
+  pointLight(0, 0, 255, 1600, 500, 200);
+  pointLight(0, 255, 0, 800, 500, 10);
 
   for (int row = 0; row < numRows; row++) {
     int y = row * (flakeSize + gap) + (flakeBox / 2);
@@ -81,6 +88,7 @@ void drawRowsAndColumns() {
     }
   }
 }
+
 
 double getRotation(int count, int rotationCycle) {
   double proportion = getProportion(count, rotationCycle);

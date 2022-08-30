@@ -1,26 +1,17 @@
 class Snowflake3D {
   int flakeSize;
-  int half;
-  int quarter;
-  int eighth;
+  int halfFlakeSize;
+
   float sixth = PI / 3.0; // Sixth of a circle in radians
+  float eighth = PI / 4.0;
+  float cosineOfEighth = cos(eighth);
+  float sineOfEighth = sin(eighth);
+
   
   float twelfth = PI / 6.0; // twentyFourth of a circle in radians
   float cosineOfTwelfth = cos(twelfth);
   float sineOfTwelfth = sin(twelfth);
-  
-  float twentyFourth = PI / 12.0; // twentyFourth of a circle in radians
-  float cosineOfTwentyFourth = cos(twentyFourth);
-  float sineOfTwentyFourth = sin(twentyFourth);
-  
-  float eighteenth = PI / 9.0;
-  float cosineOfEighteenth = cos(eighteenth);
-  float sineOfEighteenth = sin(eighteenth);
-  
-  float fiveTwentyFourth = twentyFourth * 5.0;
-  float cosineOfFiveTwentyFourth = cos(fiveTwentyFourth);
-  float sineOfFiveTwentyFourth = sin(fiveTwentyFourth);
-  
+    
   float thirtySixth = PI / 18.0;
   float sevenThirtySixths = 7.0 * thirtySixth;
   float cosineOfSevenThirtySixth = cos(sevenThirtySixths);
@@ -29,9 +20,7 @@ class Snowflake3D {
 
   Snowflake3D(int size) {
     flakeSize = size;
-    half = flakeSize / 2;
-    quarter = flakeSize / 4;
-    eighth = flakeSize / 8;
+    halfFlakeSize = flakeSize / 2;
   }
   
  void drawSnowflake() {
@@ -39,11 +28,32 @@ class Snowflake3D {
    for (int i = 0; i < 6; i++) {
     //translate(half/2.0, 0, 0);
     drawSegment();
-    drawInnerHex();
     rotate((float) sixth);
    }    
    pop();
  }
+
+  void drawSegment() {
+    drawBox(0, 0, 0, halfFlakeSize);
+    //drawInnerHex();
+    drawArms();
+  }
+  
+  void drawArms() {
+    drawArm(flakeSize * 0.15, flakeSize * 0.2);
+    drawArm(flakeSize * 0.25, flakeSize * 0.2);
+    drawArm(flakeSize * 0.35, flakeSize * 0.1);
+  }
+
+  void drawArm(float rad, float len) {
+    pushMatrix();
+    translate(0f, rad);
+    int x = (int) (sineOfEighth * len);
+    int y = (int) (cosineOfEighth * len);
+    drawBox(0, 0, x, y);
+    drawBox(0, 0, -x, y);
+    popMatrix();
+  }
 
 
 
@@ -79,12 +89,6 @@ class Snowflake3D {
     
   }
   
-  void drawSegment() {
-    //line(0, 0, 0, half);
-    //box(half, thickness, thickness);
-    drawBox(0, 0, 0, half);
-  }
-  
   void drawBox(int x1, int y1, int x2, int y2) {
     push();
     float dy = y2 - y1;
@@ -97,7 +101,7 @@ class Snowflake3D {
     translate(x1, y1, 0);
     rotate(angle);
     translate(len/2, 0, 0);
-    box(len, thickness, thickness);
+    box(len + 7, thickness, thickness);
     //println(x1, y1, x2, y2, len, angle);
     pop();
   }
