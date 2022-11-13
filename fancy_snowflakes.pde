@@ -5,9 +5,9 @@ int numRows = 9;
 int flakeBox = windowHeight / numRows;
 int flakeSize = (int) (flakeBox * 0.8);
 int gap = flakeBox - flakeSize;
-int rotationCycleX = 200;
-int rotationCycleY = 300;
-int rotationCycleZ = 400;
+int rotationCycleX = 7000;
+int rotationCycleY = 3000;
+int rotationCycleZ = 5000;
 int countX;
 int countY;
 int countZ;
@@ -16,12 +16,12 @@ int lightCycleRedX = windowWidth; // was 250
 int countRedX = 0;
 int countGreenX = windowWidth;
 int countBlueX = windowWidth / 2;
-int incrementRed = 7;
-int incrementGreen = 11;
-int incrementBlue = -19;
+int incrementRed = 5;
+int incrementGreen = 7;
+int incrementBlue = -11;
 
 int framesPerSecond = 30;
-int numSeconds = 30;
+int numSeconds = 120;
 int numFrames = framesPerSecond * numSeconds;
 int frameNo = 0;
 
@@ -57,12 +57,12 @@ void draw() {
   
   //snowflake.drawSnowflake(windowWidth / 2, windowHeight / 2, 0);
   drawRowsAndColumns();
+  //saveFrame("data/f-####.tif");
   
   if (++frameNo == numFrames) {
     noLoop();
   }
   
-  // saveFrame
 }
 
 void drawRowsAndColumns() {
@@ -89,9 +89,9 @@ void drawRowsAndColumns() {
   int lightY = windowHeight / 2;
   int lightZ = 300;
   
-  pointLight(200, 200, 200, redX, lightY, lightZ);
-  pointLight(0, 230, 180, greenX, lightY, lightZ);
-  pointLight(190, 200, 255, blueX, lightY, lightZ);
+  pointLight(255, 0, 220, redX, lightY, lightZ);
+  pointLight(0, 255, 230, greenX, lightY, lightZ);
+  pointLight(0, 0, 255, blueX, lightY, lightZ);
 
   for (int row = 0; row < numRows; row++) {
     int y = row * (flakeSize + gap) + (flakeBox / 2);
