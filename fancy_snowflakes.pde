@@ -11,9 +11,18 @@ int rotationCycleZ = 400;
 int countX;
 int countY;
 int countZ;
-int lightCycleRedX = 250;
-int countRedX;
-int numFrames = 1000;
+int lightCycleRedX = windowWidth; // was 250
+
+int countRedX = 0;
+int countGreenX = windowWidth;
+int countBlueX = windowWidth / 2;
+int incrementRed = 7;
+int incrementGreen = 11;
+int incrementBlue = -19;
+
+int framesPerSecond = 30;
+int numSeconds = 30;
+int numFrames = framesPerSecond * numSeconds;
 int frameNo = 0;
 
 Snowflake3D snowflake3D;
@@ -60,12 +69,29 @@ void drawRowsAndColumns() {
   double rotationX = getRotation(countX++, rotationCycleX);
   double rotationZ = getRotation(countZ++, rotationCycleZ);
   
-  double redXProportion = getProportion(countRedX++, lightCycleRedX);
-  int redX = (int) lerp(0.0f, (float) lightCycleRedX, (float) redXProportion);
+  double proportion = getProportion(countRedX, windowWidth);  
+  int redX = (int) lerp(0.0f, (float) windowWidth, (float) proportion);
+  incrementRed = getIncrementValue(countRedX, incrementRed, windowWidth);
+  countRedX = redX + incrementRed;
+
+  proportion = getProportion(countGreenX, windowWidth);
+  int greenX = (int) lerp(0.0f, (float) windowWidth, (float) proportion);
+  incrementGreen = getIncrementValue(countGreenX, incrementGreen, windowWidth);
+  countGreenX = greenX + incrementGreen;
+
+  proportion = getProportion(countBlueX, windowWidth);
+  int blueX = (int) lerp(0.0f, (float) windowWidth, (float) proportion);
+  incrementBlue = getIncrementValue(countBlueX, incrementBlue, windowWidth);
+  countBlueX = blueX + incrementBlue;
+
+  println("frame: ", frameNo, " redX: ", redX, " greenX: ", greenX, " blueX: ", blueX);
   
-  pointLight(255, 0, 0, redX, 500, 300);
-  pointLight(0, 0, 255, 1600, 500, 200);
-  pointLight(0, 255, 0, 800, 500, 10);
+  int lightY = windowHeight / 2;
+  int lightZ = 300;
+  
+  pointLight(200, 200, 200, redX, lightY, lightZ);
+  pointLight(0, 230, 180, greenX, lightY, lightZ);
+  pointLight(190, 200, 255, blueX, lightY, lightZ);
 
   for (int row = 0; row < numRows; row++) {
     int y = row * (flakeSize + gap) + (flakeBox / 2);
@@ -89,6 +115,11 @@ void drawRowsAndColumns() {
   }
 }
 
+int getIncrementValue(int value, int amount, int max) {
+  int nextValue = value + amount;
+  if (nextValue < 0 || nextValue > max) return -amount;
+  return amount;
+}
 
 double getRotation(int count, int rotationCycle) {
   double proportion = getProportion(count, rotationCycle);
