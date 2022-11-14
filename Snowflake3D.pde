@@ -1,4 +1,5 @@
 class Snowflake3D {
+  PGraphics pg;
   int flakeSize;
   int halfFlakeSize;
 
@@ -18,19 +19,20 @@ class Snowflake3D {
   float sineOfSevenThirtySixth = sin(sevenThirtySixths);
   int thickness = 4;
 
-  Snowflake3D(int size) {
+  Snowflake3D(int size, PGraphics graphics) {
+    pg = graphics;
     flakeSize = size;
     halfFlakeSize = flakeSize / 2;
   }
   
  void drawSnowflake() {
-   push();
+   pg.push();
    for (int i = 0; i < 6; i++) {
     //translate(half/2.0, 0, 0);
     drawSegment();
-    rotate((float) sixth);
+    pg.rotate((float) sixth);
    }    
-   pop();
+   pg.pop();
  }
 
   void drawSegment() {
@@ -46,13 +48,13 @@ class Snowflake3D {
   }
 
   void drawArm(float rad, float len) {
-    pushMatrix();
-    translate(0f, rad);
+    pg.pushMatrix();
+    pg.translate(0f, rad);
     int x = (int) (sineOfEighth * len);
     int y = (int) (cosineOfEighth * len);
     drawBox(0, 0, x, y);
     drawBox(0, 0, -x, y);
-    popMatrix();
+    pg.popMatrix();
   }
 
 
@@ -90,7 +92,7 @@ class Snowflake3D {
   }
   
   void drawBox(int x1, int y1, int x2, int y2) {
-    push();
+    pg.push();
     float dy = y2 - y1;
     float dx = x2 - x1;
     int len = (int) Math.sqrt((dx * dx) + (dy * dy));
@@ -98,12 +100,12 @@ class Snowflake3D {
       len = -len;
     }
     float angle = asin((float) (dy / len));
-    translate(x1, y1, 0);
-    rotate(angle);
-    translate(len/2, 0, 0);
-    box(len + 7, thickness, thickness);
+    pg.translate(x1, y1, 0);
+    pg.rotate(angle);
+    pg.translate(len/2, 0, 0);
+    pg.box(len + 7, thickness, thickness);
     //println(x1, y1, x2, y2, len, angle);
-    pop();
+    pg.pop();
   }
   
 }

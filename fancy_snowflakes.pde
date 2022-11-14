@@ -21,12 +21,13 @@ int incrementGreen = 7;
 int incrementBlue = -11;
 
 int framesPerSecond = 30;
-int numSeconds = 120;
+int numSeconds = 10;
 int numFrames = framesPerSecond * numSeconds;
 int frameNo = 0;
 
 Snowflake3D snowflake3D;
 Snowflake snowflake;
+PGraphics pg;
 
 boolean do3D = true;
 
@@ -35,17 +36,24 @@ void setup() {
   // 1280 x 720
   // full hd:
   size(1920, 1080, P3D);
-  background(0);
+  //background(0);
   //fill(255);
   //stroke(255);
   //noStroke();
+  pg = createGraphics(windowWidth, windowHeight, P3D);
+  
+  pg.beginDraw();
+  pg.background(0, 0, 0, 0);
+  pg.endDraw();
+  
   strokeWeight(2);
   frameRate(30);
-  snowflake3D = new Snowflake3D(flakeSize);
+  snowflake3D = new Snowflake3D(flakeSize, pg);
   snowflake = new Snowflake(flakeSize);
 }
 
 void draw() {
+  pg.beginDraw();
   clear();
   //directionalLight(255, 0, 0, 1, 1, -0.5);
   //directionalLight(64, 64, 255, -1, 1, -0.5);
@@ -57,11 +65,15 @@ void draw() {
   
   //snowflake.drawSnowflake(windowWidth / 2, windowHeight / 2, 0);
   drawRowsAndColumns();
-  //saveFrame("data/f-####.tif");
+  pg.endDraw();
+  String name = "data/f-" + nf(frameNo, 4) + ".png";
+  pg.save(name);
+  //saveFrame("data/f-####.png");
   
   if (++frameNo == numFrames) {
     noLoop();
   }
+  
   
 }
 
@@ -89,18 +101,18 @@ void drawRowsAndColumns() {
   int lightY = windowHeight / 2;
   int lightZ = 300;
   
-  pointLight(255, 0, 220, redX, lightY, lightZ);
-  pointLight(0, 255, 230, greenX, lightY, lightZ);
-  pointLight(0, 0, 255, blueX, lightY, lightZ);
+  pg.pointLight(255, 0, 220, redX, lightY, lightZ);
+  pg.pointLight(0, 255, 230, greenX, lightY, lightZ);
+  pg.pointLight(0, 0, 255, blueX, lightY, lightZ);
 
   for (int row = 0; row < numRows; row++) {
     int y = row * (flakeSize + gap) + (flakeBox / 2);
     for (int col = 0; col < numCols; col++) {
       int x = (col * flakeBox) + (flakeBox / 2);
-      push();
-      translate(x, y);
-      rotateX((float) rotationX);
-      rotateZ((float) rotationZ);
+      pg.push();
+      pg.translate(x, y);
+      pg.rotateX((float) rotationX);
+      pg.rotateZ((float) rotationZ);
       //snowflake.drawSnowflake(x, y, rotation);
       //directionalLight(255, 0, 0, 1, 1, -1);
       //directionalLight(0, 0, 255, -1, 1, -1);
@@ -110,7 +122,7 @@ void drawRowsAndColumns() {
         stroke(255);
         snowflake.drawSnowflake();
       }
-      pop();
+      pg.pop();
     }
   }
 }
