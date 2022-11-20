@@ -5,9 +5,9 @@ int numRows = 9;
 int flakeBox = windowHeight / numRows;
 int flakeSize = (int) (flakeBox * 0.8);
 int gap = flakeBox - flakeSize;
-int rotationCycleX = 7000;
-int rotationCycleY = 3000;
-int rotationCycleZ = 5000;
+int rotationCycleX = 900;
+int rotationCycleY = 500;
+int rotationCycleZ = 700;
 int countX;
 int countY;
 int countZ;
@@ -21,7 +21,7 @@ int incrementGreen = 7;
 int incrementBlue = -11;
 
 int framesPerSecond = 30;
-int numSeconds = 10;
+int numSeconds = 4 * 60 + 20; // 4'20"
 int numFrames = framesPerSecond * numSeconds;
 int frameNo = 0;
 
