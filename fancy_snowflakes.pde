@@ -21,7 +21,8 @@ int incrementGreen = 7;
 int incrementBlue = -11;
 
 int framesPerSecond = 30;
-int numSeconds = 4 * 60 + 20; // 4'20"
+int numSeconds = 90;
+//int numSeconds = 4 * 60 + 20; // 4'20"
 int numFrames = framesPerSecond * numSeconds;
 int frameNo = 0;
 
